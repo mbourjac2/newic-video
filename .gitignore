@@ -9,5 +9,5 @@ wp-config.prod.php
 /wp-content/uploads/
 /wp-content/uploads.zip
 /wp-content/themes/newic-video/static/style.min.css
-/wp-content/themes/epsilon-bikes/static/bundle.min.js
+/wp-content/themes/newic-video/static/bundle.min.js
 /wp-content/cache/

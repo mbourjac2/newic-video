@@ -1,0 +1,30 @@
+{
+  "files.associations": {
+    "*.html": "twig"
+  },
+  "emmet.includeLanguages": {
+    "twig": "html"
+  },
+  "[twig]": {
+    "editor.defaultFormatter": "mblode.twig-language-2"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false,
+  "prettier.tabWidth": 2,
+  "prettier.printWidth": 120,
+  "prettier.trailingComma": "es5",
+  "twig-language-2.indentStyle": "space",
+  "twig-language-2.preserve": 1
+}

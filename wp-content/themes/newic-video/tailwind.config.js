@@ -3,7 +3,16 @@
 module.exports = {
   content: ['**/*.twig'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        body: ['"filson-pro"', 'sans-serif'],
+      },
+      colors: {
+        primary: {
+          DEFAULT: '#0441BF',
+        },
+      },
+    },
   },
   plugins: [],
 };

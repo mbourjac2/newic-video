@@ -1,0 +1,13 @@
+# Wordpress - ignore core, configuration, examples, uploads and logs.
+# https://github.com/github/gitignore/blob/main/WordPress.gitignore
+
+.DS_Store
+node_modules
+vendor
+wp-config.php
+wp-config.prod.php
+/wp-content/uploads/
+/wp-content/uploads.zip
+/wp-content/themes/newic-video/static/style.min.css
+/wp-content/themes/epsilon-bikes/static/bundle.min.js
+/wp-content/cache/

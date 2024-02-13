@@ -1,0 +1,30 @@
+{
+  "name": "newic-video",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.com/timber/starter-theme.svg?branch=master)](https://travis-ci.com/github/timber/starter-theme) [![Packagist Version](https://img.shields.io/packagist/v/upstatement/timber-starter-theme?include_prereleases)](https://packagist.org/packages/upstatement/timber-starter-theme)",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "build:css": "postcss static/css/index.css -o static/style.min.css -w",
+    "build:js": "rollup --config -w",
+    "build": "concurrently \"npm:build:css\" \"npm:build:js\""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "autoprefixer": "^10.4.17",
+    "concurrently": "^8.2.2",
+    "cssnano": "^6.0.3",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "postcss": "^8.4.35",
+    "postcss-cli": "^11.0.0",
+    "postcss-import": "^16.0.0",
+    "prettier": "3.2.5",
+    "rollup": "^4.10.0",
+    "tailwindcss": "^3.4.1"
+  }
+}

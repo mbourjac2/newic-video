@@ -1,0 +1,22 @@
+<fieldset class="{{ class }}">
+  <div class="flex gap-4 items-center">
+    <legend>{{ heading }}</legend>
+    {# display all unique tags of a given tag slug #}
+    {% set unique_tags = [] %}
+    {% for project in projects %}
+      {% set tags = project.terms(tag_slug) %}
+      {% for tag in tags %}
+        {% if tag.slug not in unique_tags %}
+          {% set unique_tags = unique_tags|merge([tag.slug]) %}
+          <div>
+            <input type="radio" name="{{ tag.taxonomy }}" id="{{ tag.slug }}" value={{ tag.slug }} class="peer hidden">
+            <label for="{{ tag.slug }}" class="cursor-pointer inline-block px-4 py-2 border border-black leading-none peer-checked:bg-primary-light peer-disabled:opacity-25">
+              <span>{{ tag }}</span>
+              <sup class="tag-count"></sup>
+            </label>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </div>
+</fieldset>

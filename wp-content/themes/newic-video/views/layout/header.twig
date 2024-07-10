@@ -1,0 +1,10 @@
+<header class="flex justify-between items-center p-8">
+  <h1 class="text-primary text-xl font-black">Newic Vidéo</h1>
+  <nav aria-label="primary">
+    <ul class="flex gap-8 font-medium">
+      <li>
+        {% include "components/link.twig" with {'href': site.url ~ "/realisations/", 'content': 'Réalisations'} %}
+      </li>
+    </ul>
+  </nav>
+</header>

@@ -3,5 +3,7 @@
 @import './base/base.css';
 
 @import 'tailwindcss/components';
+@import './components/section.css';
 
 @import 'tailwindcss/utilities';
+@import './utilities/utilities.css';

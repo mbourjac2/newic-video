@@ -19,12 +19,10 @@
       {# filters #}
       {% include "pages/all-projects/filters/filters.twig" %}
       <div
-        data-total-pages="{{ total_pages }}" class="projects-container grid grid-cols-4 gap-8">
+        class="grid grid-cols-4 gap-8">
         {# projects list #}
         {% include "pages/all-projects/projects-list/projects-list.twig" with {'project': project} %}
       </div>
-      <div class="loader hidden fixed -translate-x-1/2 bg-[rgba(0,0,0,0.8)] text-white z-10 px-5 py-2.5 rounded-md left-1/2 bottom-2.5">Loading...</div>
-      <div class="sentinel"></div>
     {% else %}
       <p>Aucune réalisation pour le moment.</p>
     {% endif %}

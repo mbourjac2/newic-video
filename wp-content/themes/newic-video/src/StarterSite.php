@@ -17,9 +17,6 @@ class StarterSite extends Site {
 		add_filter( 'timber/twig/environment/options', [ $this, 'update_twig_environment_options' ] );
 		add_filter( 'script_loader_tag', array( $this, 'add_type_attribute' ), 10, 3 );
 
-    add_action('wp_ajax_nopriv_load_more_projects', array( $this, 'load_more_projects' ));
-		add_action('wp_ajax_load_more_projects', array( $this, 'load_more_projects' ));
-
 		parent::__construct();
 	}
 
@@ -173,30 +170,6 @@ class StarterSite extends Site {
 
 		wp_register_script('script', get_template_directory_uri() . '/static/bundle.min.js');
 		wp_enqueue_script('script');
-
-    wp_localize_script( 'script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
-	}
-
-  /**
-	 * Load more projects for infinite scrolling
-	 */
-	public function load_more_projects() {
-		$paged = $_POST['page'] + 1; // Get the next page number
-		$args = array(
-			'post_type'      => 'project',
-			'post_status'    => 'publish',
-			'posts_per_page' => 8,
-			'paged'          => $paged,
-			'order'          => 'DESC',
-			'orderby'        => 'date',
-		);
-
-		$context = Timber::context();
-		$context['projects'] = Timber::get_posts($args);
-
-		Timber::render('pages/all-projects/projects-list/projects-list.twig', $context); // Render a partial template with just the project cards
-
-		wp_die(); // This is required to terminate immediately and return a proper response
 	}
 
 	/**

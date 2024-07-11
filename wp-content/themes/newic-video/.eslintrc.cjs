@@ -23,4 +23,7 @@ module.exports = {
     'prefer-const': 'error',
     'one-var': ['error', 'never'],
   },
+  globals: {
+    ajax_object: 'readonly',
+  },
 };

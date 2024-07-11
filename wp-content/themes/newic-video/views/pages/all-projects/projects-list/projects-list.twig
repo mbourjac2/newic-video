@@ -1,13 +1,11 @@
 {% for project in projects %}
   <article
     class="project-card selected flex flex-col gap-2" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
-    {# video #}
-    <div class="bg-primary-light">
-      {% set video_link = project.video_link %}
-      {% if video_link %}
-        {% set custom_video_link = video_link|replace({'?': '?portrait=0&title=0&byline=0&controls=0&'}) %}
-        {{ custom_video_link|raw }}
-      {% endif %}
+    {# video thumbnail #}
+    {% set video_thumbnail = project.video_thumbnail %}
+    {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}
+    <div class="bg-primary-light aspect-video">
+      <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
     </div>
     {# clients and title #}
     <h2 class="truncate">

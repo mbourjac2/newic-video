@@ -100,6 +100,34 @@ class StarterSite extends Site {
 		add_theme_support( 'menus' );
 	}
 
+  /**
+   * Grab the specified data like Thumbnail URL of a publicly embeddable video hosted on Vimeo.
+   *
+   * @param  str $video_link The URL of a Vimeo video.
+   * @param  str $data       Video data to be fetched
+   * @return str             The specified data
+   */
+  function get_vimeo_data_from_link( $video_link, $data ) {
+    // Parse the URL to get the path
+    $parsed_url = wp_parse_url( $video_link );
+
+    // Extract the video ID from the path
+    $path_parts = explode( '/', trim( $parsed_url['path'], '/' ) );
+    $video_id = end( $path_parts );
+
+    // Make the API request
+    $request = wp_remote_get( 'https://vimeo.com/api/oembed.json?url=https://vimeo.com/' . $video_id );
+
+    // Retrieve the response body
+    $response = wp_remote_retrieve_body( $request );
+
+    // Decode the JSON response
+    $video_array = json_decode( $response, true );
+
+    // Return the requested data
+    return isset( $video_array[$data] ) ? $video_array[$data] : null;
+  }
+
 	/**
 	 * This is where you can add your own functions to twig.
 	 *
@@ -113,6 +141,7 @@ class StarterSite extends Site {
 		// $twig->addExtension( new Twig\Extension\StringLoaderExtension() );
 
 		$twig->addFilter( new Twig\TwigFilter( 'myfoo', [ $this, 'myfoo' ] ) );
+    $twig->addFunction( new Twig\TwigFunction( 'get_vimeo_data_from_link', [ $this, 'get_vimeo_data_from_link' ] ) );
 
 		return $twig;
 	}

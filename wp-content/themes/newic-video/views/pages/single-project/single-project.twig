@@ -1,0 +1,49 @@
+{% extends "base.twig" %}
+
+{% block content %}
+  {# header #}
+  {% include "layout/header.twig" %}
+  <div class="p-8">
+    <main
+      class="flex flex-col gap-8">
+      {# video #}
+      <div class="bg-primary-light">
+        {% set video_link = project.video_link %}
+        {% if video_link %}
+          {% set custom_video_link = video_link|replace({'?': '?portrait=0&title=0&byline=0&'}) %}
+          {{ custom_video_link|raw }}
+        {% endif %}
+      </div>
+      <div
+        class="flex flex-col gap-4">
+        {# clients and title #}
+        <h2 class="text-2xl">
+          {% set clients = project.terms('client') %}
+          {% if clients and clients|length > 0 %}
+            <span class="project-clients">{{ clients | join(', ') }}
+              -
+            </span>
+          {% endif %}
+          <span class="project-title">{{ project.title }}</span>
+        </h2>
+        {# project tags #}
+        {% set fields = project.terms('field') %}
+        {% set categories = project.terms('project-category') %}
+        <ul
+          class="flex flex-wrap gap-1">
+          {# field project tags #}
+          {% for field in fields %}
+            {% include "pages/single-project/project-tag.twig" with {'tag': field} %}
+          {% endfor %}
+          {# category project tags #}
+          {% for category in categories %}
+            {% include "pages/single-project/project-tag.twig" with {'tag': category} %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="flex flex-col gap-5 md:gap-6 [&_a]:text-primary">
+        {{ project.description|wpautop }}
+      </div>
+    </main>
+  </div>
+{% endblock %}

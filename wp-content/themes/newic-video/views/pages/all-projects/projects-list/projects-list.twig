@@ -1,35 +1,37 @@
 {% for project in projects %}
-  <article
-    class="project-card selected flex flex-col gap-2" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
-    {# video thumbnail #}
-    {% set video_thumbnail = project.video_thumbnail %}
-    {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}
-    <div class="bg-primary-light aspect-video">
-      <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
-    </div>
-    {# clients and title #}
-    <h2 class="truncate">
-      {% set clients = project.terms('client') %}
-      {% if clients and clients|length > 0 %}
-        <span class="project-clients">{{ clients | join(', ') }}
-          -
-        </span>
-      {% endif %}
-      <span class="project-title">{{ project.title }}</span>
-    </h2>
-    {# project tags #}
-    {% set fields = project.terms('field') %}
-    {% set categories = project.terms('project-category') %}
-    <ul
-      class="flex flex-wrap gap-1">
-      {# field project tags #}
-      {% for field in fields %}
-        {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': field} %}
-      {% endfor %}
-      {# category project tags #}
-      {% for category in categories %}
-        {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': category} %}
-      {% endfor %}
-    </ul>
-  </article>
+  <a href="{{ project.link}}">
+    <article
+      class="project-card selected flex flex-col gap-2" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
+      {# video thumbnail #}
+      {% set video_thumbnail = project.video_thumbnail %}
+      {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}
+      <div class="bg-primary-light aspect-video">
+        <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
+      </div>
+      {# clients and title #}
+      <h2 class="truncate">
+        {% set clients = project.terms('client') %}
+        {% if clients and clients|length > 0 %}
+          <span class="project-clients">{{ clients | join(', ') }}
+            -
+          </span>
+        {% endif %}
+        <span class="project-title">{{ project.title }}</span>
+      </h2>
+      {# project tags #}
+      {% set fields = project.terms('field') %}
+      {% set categories = project.terms('project-category') %}
+      <ul
+        class="flex flex-wrap gap-1">
+        {# field project tags #}
+        {% for field in fields %}
+          {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': field} %}
+        {% endfor %}
+        {# category project tags #}
+        {% for category in categories %}
+          {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': category} %}
+        {% endfor %}
+      </ul>
+    </article>
+  </a>
 {% endfor %}

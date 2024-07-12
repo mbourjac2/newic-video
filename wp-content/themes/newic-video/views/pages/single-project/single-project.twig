@@ -30,14 +30,14 @@
         {% set fields = project.terms('field') %}
         {% set categories = project.terms('project-category') %}
         <ul
-          class="flex flex-wrap gap-1">
+          class="flex flex-wrap gap-2">
           {# field project tags #}
           {% for field in fields %}
-            {% include "pages/single-project/project-tag.twig" with {'tag': field} %}
+            {% include "pages/single-project/tag-link.twig" with {'tag': field} %}
           {% endfor %}
           {# category project tags #}
           {% for category in categories %}
-            {% include "pages/single-project/project-tag.twig" with {'tag': category} %}
+            {% include "pages/single-project/tag-link.twig" with {'tag': category} %}
           {% endfor %}
         </ul>
       </div>

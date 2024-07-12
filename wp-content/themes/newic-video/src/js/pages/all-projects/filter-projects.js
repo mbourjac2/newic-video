@@ -17,6 +17,21 @@ export const filterProjects = () => {
 
   const searchProjectsForm = document.querySelector('.search-projects');
 
+  const handleSearchParams = () => {
+    const url = window.location.href;
+    const parsedUrl = new URL(url);
+    const searchParams = parsedUrl.searchParams;
+    const filterValue = searchParams.get('filter');
+
+    if (!filterValue) return;
+
+    const input = document.querySelector(`input[value="${filterValue}"]`);
+
+    if (!input) return;
+
+    input.click();
+  };
+
   const getSearchData = (form) => {
     const formData = new FormData(form);
     const normalizedSearch = normalizeString(formData.get('search'));
@@ -324,5 +339,6 @@ export const filterProjects = () => {
     }
   });
 
+  handleSearchParams();
   updateAllProjectsCount();
 };

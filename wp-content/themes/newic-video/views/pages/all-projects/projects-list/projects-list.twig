@@ -1,7 +1,7 @@
 {% for project in projects %}
-  <a href="{{ project.link}}">
+  <a href="{{ project.link}}" class="project-card selected" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
     <article
-      class="project-card selected flex flex-col gap-2" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
+      class="flex flex-col gap-2">
       {# video thumbnail #}
       {% set video_thumbnail = project.video_thumbnail %}
       {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}

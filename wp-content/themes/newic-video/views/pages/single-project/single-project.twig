@@ -3,9 +3,9 @@
 {% block content %}
   {# header #}
   {% include "layout/header.twig" %}
-  <div class="flex gap-8 px-8 py-4">
+  <div class="single-project flex">
     <main
-      class="flex flex-col gap-8 w-[calc(80vw-3rem)]">
+      class="flex flex-col gap-8 w-[80vw] p-4 pl-8">
       {# video #}
       <div class="bg-primary-light">
         {% set video_link = project.video_link %}
@@ -45,26 +45,7 @@
         {{ project.description|wpautop }}
       </div>
     </main>
-    <aside class="flex flex-col gap-8 w-[calc(20vw-3rem)]">
-      <div class="flex flex-col gap-8">
-        <p class="text-lg">Lorem ipsum dolor sit amet consectetur adipisicing</p>
-        {# Display four random projects #}
-        <div class="flex flex-col gap-8">
-          {% for random_project in random_projects %}
-            <a href="{{ random_project.link }}">
-              <article class="flex flex-col gap-2">
-                <h3 class="truncate">{{ random_project.title }}</h3>
-                {# video thumbnail #}
-                {% set video_thumbnail = random_project.video_thumbnail %}
-                {% set vimeo_thumbnail = get_vimeo_data_from_link(random_project.video_link, 'thumbnail_url') %}
-                <div class="bg-primary-light aspect-video">
-                  <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
-                </div>
-              </article>
-            </a>
-          {% endfor %}
-        </div>
-      </div>
-    </aside>
+    {% include "pages/single-project/suggestions/suggestions.twig" %}
   </div>
+  <footer class="footer h-[10vh] bg-primary-light"></footer>
 {% endblock %}

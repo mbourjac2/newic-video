@@ -1,0 +1,32 @@
+<div class="suggestions-panel hidden" data-type="{{ tag }}">
+  <div class="flex flex-col gap-6">
+    {% for project in suggestions %}
+      <a href="{{ project.link }}">
+        <article
+          class="flex flex-col gap-1">
+          {# video thumbnail #}
+          {% set video_thumbnail = project.video_thumbnail %}
+          {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}
+          <div class="bg-primary-light aspect-video">
+            <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
+          </div>
+          <h3 class="truncate">{{ project.title }}</h3>
+          {# project tags #}
+          {% set fields = project.terms('field') %}
+          {% set categories = project.terms('project-category') %}
+          <ul
+            class="flex flex-wrap gap-1">
+            {# field project tags #}
+            {% for field in fields %}
+              {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': field} %}
+            {% endfor %}
+            {# category project tags #}
+            {% for category in categories %}
+              {% include "pages/all-projects/projects-list/project-tag.twig" with {'tag': category} %}
+            {% endfor %}
+          </ul>
+        </article>
+      </a>
+    {% endfor %}
+  </div>
+</div>

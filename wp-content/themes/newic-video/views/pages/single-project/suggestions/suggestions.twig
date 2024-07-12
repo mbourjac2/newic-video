@@ -1,0 +1,31 @@
+<aside class="suggestions sticky top-[3.75rem] right-0 flex w-[20vw] h-[calc(100vh-3.75rem)] p-4 pr-8 overflow-hidden">
+  <div class="flex flex-col gap-8 overflow-y-auto">
+    <p class="text-lg">Lorem ipsum dolor sit amet consectetur adipisicing</p>
+    {# project tags #}
+    {% set fields = project.terms('field') %}
+    {% set categories = project.terms('project-category') %}
+    <ul
+      class="flex flex-wrap gap-1">
+      {# field project tags #}
+      {% for field in fields %}
+        {% include "pages/single-project/suggestions/suggestions-filter.twig" with {'label': field, 'value': field.slug} %}
+      {% endfor %}
+      {# category project tags #}
+      {% for category in categories %}
+        {% include "pages/single-project/suggestions/suggestions-filter.twig" with {'label': category, 'value': category.slug} %}
+      {% endfor %}
+      {# random tag #}
+      {% include "pages/single-project/suggestions/suggestions-filter.twig" with {'label': 'Autres', 'value': 'other'} %}
+    </ul>
+    {# Display related projects for each field tag #}
+    {% for field, related_field_projects in related_projects.fields %}
+      {% include "pages/single-project/suggestions/suggestions-list.twig" with {'suggestions': related_field_projects, 'tag': field} %}
+    {% endfor %}
+    {# Display related projects for each category tag #}
+    {% for category, related_category_projects in related_projects.categories %}
+      {% include "pages/single-project/suggestions/suggestions-list.twig" with {'suggestions': related_category_projects, 'tag': category} %}
+    {% endfor %}
+    {# Display four random projects #}
+    {% include "pages/single-project/suggestions/suggestions-list.twig" with {'suggestions': random_projects, 'tag': 'other'} %}
+  </div>
+</aside>

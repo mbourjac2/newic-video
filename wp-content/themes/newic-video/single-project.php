@@ -15,7 +15,7 @@ if (is_single() && $context['project']->post_type === 'project') {
   // Query for four random projects
     $args = array(
       'post_type' => 'project',
-      'posts_per_page' => 4,
+      'posts_per_page' => 3,
       'orderby' => 'rand',
       'post__not_in' => array($context['project']->ID) // Exclude the current project
     );
@@ -34,7 +34,7 @@ if (is_single() && $context['project']->post_type === 'project') {
     foreach ($fields as $field) {
         $args = array(
             'post_type' => 'project',
-            'posts_per_page' => 4,
+            'posts_per_page' => 3,
             'orderby' => 'rand',
             'post__not_in' => array($context['project']->ID), // Exclude the current project
             'tax_query' => array(
@@ -53,7 +53,7 @@ if (is_single() && $context['project']->post_type === 'project') {
     foreach ($categories as $category) {
         $args = array(
             'post_type' => 'project',
-            'posts_per_page' => 4,
+            'posts_per_page' => 3,
             'orderby' => 'rand',
             'post__not_in' => array($context['project']->ID), // Exclude the current project
             'tax_query' => array(

@@ -41,9 +41,21 @@
           {% endfor %}
         </ul>
       </div>
-      <div class="flex flex-col gap-5 md:gap-6 [&_a]:text-primary">
-        {{ project.description|wpautop }}
-      </div>
+      {% for item in post.meta('content') %}
+        {% if item.acf_fc_layout == 'paragraph' %}
+          <div class="flex flex-col gap-5 md:gap-6 [&_a]:text-primary">
+            {{ item.paragraph|wpautop }}
+          </div>
+        {% elseif item.acf_fc_layout == 'image' %}
+          <img src="{{ item.image.url }}" alt="{{ item.alt }}" class="object-cover w-full">
+        {% elseif item.acf_fc_layout == 'gallery' %}
+          <div class="grid grid-cols-2 gap-8">
+            {% for image in item.gallery %}
+              <img src="{{ image.image.url }}" alt="{{ image.alt }}" class="object-cover w-full">
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
     </main>
     {% include "pages/single-project/suggestions/suggestions.twig" %}
   </div>

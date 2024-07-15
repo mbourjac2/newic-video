@@ -1,6 +1,6 @@
-<fieldset class="{{ class }}">
+<div class="{{ class }}">
   <div class="flex gap-4 items-center">
-    <legend>{{ heading }}</legend>
+    <p>{{ heading }}</p>
     {# display all unique tags of a given tag slug #}
     {% set unique_tags = [] %}
     {% for project in projects %}
@@ -9,8 +9,8 @@
         {% if tag.slug not in unique_tags %}
           {% set unique_tags = unique_tags|merge([tag.slug]) %}
           <div>
-            <input type="radio" name="{{ tag.taxonomy }}" id="{{ tag.slug }}" value={{ tag.slug }} class="peer hidden">
-            <label for="{{ tag.slug }}" class="cursor-pointer inline-block px-4 py-2 border border-black leading-none peer-checked:bg-primary-light peer-disabled:opacity-25">
+            <input type="radio" name="{{ tag.taxonomy }}" id="{{ tag.slug }}" value={{ tag.slug }} class="peer sr-only">
+            <label for="{{ tag.slug }}" class="cursor-pointer inline-block px-4 py-2 border border-black leading-none peer-checked:bg-primary-light peer-disabled:opacity-25 peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2">
               <span>{{ tag }}</span>
               <sup class="tag-count"></sup>
             </label>
@@ -19,4 +19,4 @@
       {% endfor %}
     {% endfor %}
   </div>
-</fieldset>
+</div>

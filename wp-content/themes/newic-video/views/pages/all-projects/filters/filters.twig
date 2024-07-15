@@ -1,18 +1,16 @@
 <div class="flex flex-col gap-2 items-start">
-  <fieldset>
-    <div class="flex gap-4 items-center">
-      <legend>Filtres</legend>
-      <div>
-        <input type="radio" name="filter" id="all" value="all" class="peer hidden" checked>
-        <label for="all" class="cursor-pointer inline-block px-4 py-2 border border-black peer-checked:bg-primary-light peer-disabled:opacity-25 leading-none">
-          <span>Toutes les réalisations</span>
-          {% if projects and projects|length > 0 %}
-            <sup>{{ projects|length }}</sup>
-          {% endif %}
-        </label>
-      </div>
+  <div class="flex gap-4 items-center">
+    <p>Filtres</p>
+    <div>
+      <input type="radio" name="filter" id="all" value="all" class="peer sr-only" checked>
+      <label for="all" class="cursor-pointer inline-block px-4 py-2 border border-black peer-checked:bg-primary-light peer-disabled:opacity-25 leading-none peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2">
+        <span>Toutes les réalisations</span>
+        {% if projects and projects|length > 0 %}
+          <sup>{{ projects|length }}</sup>
+        {% endif %}
+      </label>
     </div>
-  </fieldset>
+  </div>
   {# field filter tags #}
   {% include "pages/all-projects/filters/tags-list.twig" with {'heading': 'Domaines', 'tag_slug': 'field', 'class': 'field-tags'} %}
   {# category filter tags #}

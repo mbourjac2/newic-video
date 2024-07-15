@@ -2,9 +2,11 @@
   <h1 class="text-primary text-lg font-black">Newic Vidéo</h1>
   <nav aria-label="primary">
     <ul class="flex gap-8 font-medium">
-      <li>
-        {% include "components/link.twig" with {'href': site.url ~ "/realisations/", 'content': 'Réalisations'} %}
-      </li>
+      {% for item in menu.get_items %}
+        <li>
+          {% include "components/link.twig" with {'href': item.url, 'content': item.title} %}
+        </li>
+      {% endfor %}
     </ul>
   </nav>
 </header>

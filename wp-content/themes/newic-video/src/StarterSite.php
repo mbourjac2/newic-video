@@ -165,6 +165,11 @@ class StarterSite extends Site {
 	 * Load custom styles and scripts.
 	 */
 	public function load_assets() {
+    // Core GSAP library
+    wp_enqueue_script( 'gsap-js', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/gsap.min.js', array(), false, true );
+    // ScrollTrigger - with gsap.js passed as a dependency
+    wp_enqueue_script( 'gsap-st', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.3/ScrollTrigger.min.js', array('gsap-js'), false, true );
+
 		wp_register_style('style', get_template_directory_uri() . '/static/style.min.css');
 		wp_enqueue_style('style');
 

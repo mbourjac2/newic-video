@@ -1,7 +1,7 @@
 /*eslint-env node*/
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['**/*.twig'],
+  content: ['**/*.twig', './src/**/*.js'],
   theme: {
     extend: {
       fontFamily: {

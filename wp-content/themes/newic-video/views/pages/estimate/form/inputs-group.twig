@@ -1,0 +1,20 @@
+<fieldset class="form-field {{ hidden_class }}" data-input="{{ input_type }}">
+  <div class="flex flex-col gap-4">
+    <legend class="flex flex-col">
+      {% for question in item.question %}
+        <span class="popup inline-block">{{ question.popup }}</span>
+      {% endfor %}
+    </legend>
+    <div class="inputs">
+      {% for input in inputs %}
+        <div>
+          <input type="{{ input_type }}" name="{{ item.id }}" id="{{ item.id ~ "-" ~ input.value }}" value="{{ input.value }}"/>
+          <label for="{{ item.id ~ "-" ~ input.value }}">{{ input.label }}</label>
+        </div>
+      {% endfor %}
+    </div>
+    {% if submit_field is defined %}
+      {% include "pages/estimate/form/submit-field.twig" %}
+    {% endif %}
+  </div>
+</fieldset>

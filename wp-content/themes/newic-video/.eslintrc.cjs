@@ -19,6 +19,10 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
+  globals: {
+    gsap: 'readonly',
+    ScrollTrigger: 'readonly',
+  },
   rules: {
     'prefer-const': 'error',
     'one-var': ['error', 'never'],

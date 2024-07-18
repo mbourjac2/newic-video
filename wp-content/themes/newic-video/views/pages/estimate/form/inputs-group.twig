@@ -1,19 +1,20 @@
-<fieldset class="form-field {{ hidden_class }}" data-input="{{ input_type }}">
+<fieldset class="fieldset {{ hidden_class }}" data-input="{{ input_type }}">
   <div class="flex flex-col gap-4">
-    <legend class="flex flex-col">
-      {% for question in item.question %}
-        <span class="popup inline-block">{{ question.popup }}</span>
-      {% endfor %}
+    <legend>
+      {% include "pages/estimate/form/question-popups.twig" %}
     </legend>
-    <div class="inputs">
+    <div class="inputs-group flex gap-2 self-end">
       {% for input in inputs %}
         <div>
-          <input type="{{ input_type }}" name="{{ item.id }}" id="{{ item.id ~ "-" ~ input.value }}" value="{{ input.value }}"/>
-          <label for="{{ item.id ~ "-" ~ input.value }}">{{ input.label }}</label>
+          <input type="{{ input_type }}" name="{{ item.id }}" id="{{ item.id ~ "-" ~ input.value }}" value="{{ input.value }}" class="peer sr-only"/>
+          <label for="{{ item.id ~ "-" ~ input.value }}" class="cursor-pointer inline-block px-6 py-2 border rounded-xl peer-checked:bg-primary-light peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2">{{ input.label }}</label>
         </div>
       {% endfor %}
     </div>
-    {% if submit_field is defined %}
+    {% if has_error_message is defined %}
+      {% include "pages/estimate/form/error-message.twig" %}
+    {% endif %}
+    {% if has_submit_field is defined %}
       {% include "pages/estimate/form/submit-field.twig" %}
     {% endif %}
   </div>

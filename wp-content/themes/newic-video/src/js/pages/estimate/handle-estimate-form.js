@@ -3,186 +3,199 @@ export const handleEstimateForm = () => {
 
   if (!form) return;
 
-  const formFields = form.querySelectorAll('.form-field');
-  const submitButton = form.querySelector('#submit-button');
+  const fieldsets = form.querySelectorAll('.fieldset');
   let currentIndex = 0;
 
-  function showNextField() {
-    if (currentIndex < formFields.length - 1) {
-      const currentFormField = formFields[currentIndex];
-      const inputType = currentFormField.dataset.input;
-      const validateButton = currentFormField.querySelector('button');
-      const questionPopups = currentFormField.querySelectorAll('.popup');
-      const inputsGroup = currentFormField.querySelector('.inputs');
-      const input = currentFormField.querySelector('input');
+  const handleCurrentFieldset = () => {
+    const fieldset = fieldsets[currentIndex];
+    const inputType = fieldset.dataset.input;
 
-      currentFormField.classList.remove('hidden');
+    const submitFieldButton = fieldset.querySelector('button');
+    const questionPopups = fieldset.querySelectorAll('.popup');
 
-      // Initial state setup with GSAP
-      gsap.set(questionPopups, { opacity: 0, x: -20 });
-      gsap.set(inputsGroup ?? input, { opacity: 0, x: -20 });
+    const inputs = fieldset.querySelectorAll(
+      'input[type="radio"], input[type="checkbox"]',
+    );
+    const input = fieldset.querySelector(
+      'input[type="text"], input[type="email"]',
+    );
+    const fieldControls =
+      inputs.length > 0 ? inputs[0].closest('.inputs-group') : input;
 
-      if (validateButton) gsap.set(validateButton, { opacity: 0, x: -20 });
-
-      // Animation for spans
-      gsap.fromTo(
-        questionPopups,
-        { opacity: 0, x: -20 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.2,
-          onComplete: () => {
-            // Animation for the "inputs" div or the single input
-            gsap.fromTo(
-              inputsGroup ?? input,
-              { opacity: 0, x: -20 },
-              { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
-            );
-
-            // Animation for the validate button if it exists
-            if (validateButton) {
-              gsap.fromTo(
-                validateButton,
-                { opacity: 0, x: -20 },
-                { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out' },
-              );
-            }
-          },
-        },
+    const handleSubmittedFieldValues = () => {
+      const { values, errorMessage } = getValidatedFieldValues(
+        inputType,
+        fieldControls,
       );
+      const errorMessageElement = fieldset.querySelector('.error-message');
 
-      if (inputType === 'radio') {
-        currentFormField
-          .querySelectorAll('input')
-          .forEach(function (radioButton) {
-            radioButton.addEventListener('change', () =>
-              validateField('radio', currentFormField),
-            );
-          });
-      } else {
-        validateButton?.addEventListener('click', () =>
-          validateField(inputType, currentFormField),
-        );
-
-        if (inputType === 'text' || inputType === 'email') {
-          input?.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault(); // Prevent the default form submission
-              validateButton.click();
-            }
-          });
-        }
+      if (errorMessage) {
+        errorMessageElement.textContent = errorMessage;
+        errorMessageElement.classList.remove('hidden');
       }
+
+      if (values.length > 0) {
+        fieldControls.classList.add('hidden');
+        submitFieldButton?.classList.add('hidden');
+        errorMessageElement?.classList.add('hidden');
+
+        displayFieldsetValues(values);
+
+        if (currentIndex < fieldsets.length - 1) {
+          showNextFieldset();
+          handleCurrentFieldset();
+        } else {
+          handleSubmitForm();
+        }
+
+        scrollToBottom();
+      }
+    };
+
+    if (inputType === 'radio') {
+      inputs.forEach((radioButton) => {
+        radioButton.addEventListener('change', handleSubmittedFieldValues);
+      });
     } else {
-      showSubmitButton();
+      submitFieldButton?.addEventListener('click', handleSubmittedFieldValues);
+
+      if (inputType === 'text' || inputType === 'email') {
+        input?.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            submitFieldButton.click();
+          }
+        });
+      }
     }
-  }
 
-  const validateField = (inputType, formField) => {
-    const button = formField.querySelector('button');
+    animateFieldset({
+      questionPopups,
+      fieldControls,
+      submitFieldButton,
+    });
+  };
 
-    let isValid = false;
-    let answerElements = [];
+  const getValidatedFieldValues = (inputType, fieldControls) => {
+    let values = [];
+    let errorMessage = null;
 
     switch (inputType) {
       case 'text':
       case 'email': {
-        const input = formField.querySelector('input');
+        const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/gi;
 
-        if (input.checkValidity()) {
-          const answerElement = document.createElement('span');
+        if (
+          fieldControls.name === 'phone' &&
+          !phoneRegex.test(fieldControls.value)
+        ) {
+          errorMessage = 'Please provide a valid phone.';
+        }
 
-          answerElement.classList.add('inline-block');
-          answerElement.append(input.value);
+        if (inputType === 'email' && fieldControls.validity.typeMismatch) {
+          errorMessage = 'Please provide a valid email.';
+        }
 
-          isValid = true;
-          answerElements = [answerElement];
-          input.classList.add('hidden');
+        if (fieldControls.validity.valueMissing) {
+          errorMessage = 'This field is required.';
+        }
+
+        if (!errorMessage) {
+          values = [fieldControls.value];
         }
 
         break;
       }
+
       case 'checkbox': {
-        const checkboxes = formField.querySelectorAll('input[type="checkbox"]');
-        const checkedCheckboxes = Array.from(checkboxes).filter(
+        const checkboxes = Array.from(fieldControls.querySelectorAll('input'));
+        const selectedCheckboxes = checkboxes.filter(
           (checkbox) => checkbox.checked,
         );
 
-        if (checkedCheckboxes.length > 0) {
-          isValid = true;
-          answerElements = checkedCheckboxes.map((checkbox) => {
-            const answerElement = document.createElement('span');
-
-            answerElement.classList.add('inline-block');
-            answerElement.append(checkbox.nextElementSibling.innerText);
-
-            return answerElement;
-          });
-          formField.querySelector('.inputs').classList.add('hidden');
+        if (selectedCheckboxes.length > 0) {
+          values = selectedCheckboxes.map(
+            (selectedCheckbox) => selectedCheckbox.nextElementSibling.innerText,
+          );
+        } else {
+          errorMessage = 'Please select at least one option.';
         }
 
         break;
       }
+
       case 'radio': {
-        const selectedRadio = formField.querySelector(
-          'input[type="radio"]:checked',
-        );
+        const selectedRadio = Array.from(
+          fieldControls.querySelectorAll('input'),
+        ).find((radio) => radio.checked);
 
         if (selectedRadio) {
-          const answerElement = document.createElement('span');
-
-          answerElement.classList.add('inline-block');
-          answerElement.append(selectedRadio.nextElementSibling.innerText);
-
-          isValid = true;
-          answerElements = [answerElement];
-          formField.querySelector('.inputs').classList.add('hidden');
+          values = [selectedRadio.nextElementSibling.innerText];
         }
 
         break;
       }
     }
 
-    if (isValid) {
-      const answersContainer = document.createElement('div');
-
-      answersContainer.classList.add('flex', 'justify-end', 'gap-4');
-
-      // Append each element individually to the answersContainer
-      answerElements.forEach((element) => {
-        answersContainer.appendChild(element);
-      });
-
-      formField.classList.remove('invalid');
-      formFields[currentIndex].firstElementChild.append(answersContainer);
-
-      if (button) {
-        button.classList.add('hidden');
-        button.removeEventListener('click', () =>
-          validateField(inputType, formField),
-        );
-      }
-
-      currentIndex++;
-
-      if (currentIndex < formFields.length) {
-        formFields[currentIndex].classList.remove('hidden');
-        showNextField();
-      } else {
-        showSubmitButton();
-      }
-
-      scrollToBottom();
-    } else {
-      formField.classList.add('invalid');
-    }
+    return { values, errorMessage };
   };
 
-  const showSubmitButton = () => {
-    submitButton.classList.remove('hidden');
+  const displayFieldsetValues = (values) => {
+    const valuesContainer = document.createElement('div');
+
+    for (const value of values) {
+      const valueElement = document.createElement('span');
+
+      valueElement.classList.add(
+        'inline-block',
+        'border',
+        'px-6',
+        'py-2',
+        'rounded-xl',
+        'w-fit',
+      );
+      valueElement.append(value);
+      valuesContainer.appendChild(valueElement);
+    }
+
+    valuesContainer.classList.add('flex', 'justify-end', 'gap-4');
+    fieldsets[currentIndex].firstElementChild.append(valuesContainer);
+  };
+
+  const showNextFieldset = () => {
+    currentIndex++;
+    fieldsets[currentIndex].classList.remove('hidden');
+  };
+
+  const animateFieldset = ({
+    questionPopups,
+    fieldControls,
+    submitFieldButton,
+  }) => {
+    const initialState = { opacity: 0, x: -20 };
+    const animatedState = {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+    };
+
+    gsap.set(questionPopups, initialState);
+    gsap.set(fieldControls, initialState);
+
+    if (submitFieldButton) gsap.set(submitFieldButton, initialState);
+
+    gsap.fromTo(questionPopups, initialState, {
+      ...animatedState,
+      stagger: 0.2,
+      onComplete: () => {
+        gsap.fromTo(fieldControls, initialState, animatedState);
+
+        if (submitFieldButton) {
+          gsap.fromTo(submitFieldButton, initialState, animatedState);
+        }
+      },
+    });
   };
 
   const scrollToBottom = () => {
@@ -192,6 +205,11 @@ export const handleEstimateForm = () => {
     });
   };
 
-  // Initially show the first field
-  showNextField();
+  const handleSubmitForm = () => {
+    const formData = new FormData(form);
+
+    for (const [key, value] of formData.entries()) console.log(key, value);
+  };
+
+  handleCurrentFieldset();
 };

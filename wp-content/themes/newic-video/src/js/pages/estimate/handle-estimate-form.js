@@ -27,17 +27,12 @@ export const handleEstimateForm = () => {
         inputType,
         fieldControls,
       );
-      const errorMessageElement = fieldset.querySelector('.error-message');
 
-      if (errorMessage) {
-        errorMessageElement.textContent = errorMessage;
-        errorMessageElement.classList.remove('hidden');
-      }
+      handleErrorMessage({ fieldset, errorMessage });
 
       if (values.length > 0) {
         fieldControls.classList.add('hidden');
         submitFieldButton?.classList.add('hidden');
-        errorMessageElement?.classList.add('hidden');
 
         displayFieldsetValues(values);
 
@@ -50,6 +45,15 @@ export const handleEstimateForm = () => {
 
         scrollToBottom();
       }
+    };
+
+    const handleInput = () => {
+      const { errorMessage } = getValidatedFieldValues(
+        inputType,
+        fieldControls,
+      );
+
+      handleErrorMessage({ fieldset, errorMessage });
     };
 
     if (inputType === 'radio') {
@@ -66,6 +70,13 @@ export const handleEstimateForm = () => {
             submitFieldButton.click();
           }
         });
+        input?.addEventListener('input', handleInput);
+      } else if (inputType === 'checkbox') {
+        fieldControls
+          .querySelectorAll('input[type="checkbox"]')
+          .forEach((checkbox) => {
+            checkbox.addEventListener('change', handleInput);
+          });
       }
     }
 
@@ -160,6 +171,17 @@ export const handleEstimateForm = () => {
 
     valuesContainer.classList.add('flex', 'justify-end', 'gap-4');
     fieldsets[currentIndex].firstElementChild.append(valuesContainer);
+  };
+
+  const handleErrorMessage = ({ fieldset, errorMessage }) => {
+    const errorMessageElement = fieldset.querySelector('.error-message');
+
+    if (errorMessage) {
+      errorMessageElement.textContent = errorMessage;
+      errorMessageElement?.classList.remove('hidden');
+    } else {
+      errorMessageElement?.classList.add('hidden');
+    }
   };
 
   const showNextFieldset = () => {

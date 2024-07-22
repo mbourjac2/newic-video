@@ -7,8 +7,8 @@
  * @since    Timber 0.1
  */
 
-$context         = Timber::context();
-$timber_post     = Timber::get_post();
+$context = Timber::context();
+$timber_post = Timber::get_post();
 $context['post'] = $timber_post;
 
-Timber::render( 'pages/home/home.twig' , $context );
+Timber::render('pages/home/home.twig', $context);

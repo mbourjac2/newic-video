@@ -7,15 +7,15 @@
  * @since    Timber 0.1
  */
 
-$context         = Timber::context();
-$timber_post     = Timber::get_post();
+$context = Timber::context();
+$timber_post = Timber::get_post();
 $context['post'] = $timber_post;
-$context['projects'] = Timber::get_posts(array(
-  'post_type'      => 'project',
-  'post_status'    => 'publish',
-  'posts_per_page' => -1,
-  'order'          => 'DESC',
-  'orderby'        => 'date',
-));
+$context['projects'] = Timber::get_posts([
+    'post_type' => 'project',
+    'post_status' => 'publish',
+    'posts_per_page' => -1,
+    'order' => 'DESC',
+    'orderby' => 'date',
+]);
 
-Timber::render( 'pages/all-projects/all-projects.twig' , $context );
+Timber::render('pages/all-projects/all-projects.twig', $context);

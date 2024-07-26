@@ -1,5 +1,5 @@
 <span class="flex flex-col gap-2">
   {% for question in item.question %}
-    <span class="popup inline-block border rounded-xl px-6 py-2 w-fit">{{ question.popup }}</span>
+    <span class="popup inline-block border rounded-xl px-6 py-2 w-fit">{{ question.popup|no_p_tags }}</span>
   {% endfor %}
 </span>

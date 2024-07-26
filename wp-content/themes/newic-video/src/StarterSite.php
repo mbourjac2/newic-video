@@ -20,6 +20,15 @@ class StarterSite extends Site {
         ]);
         add_filter('script_loader_tag', [$this, 'add_type_attribute'], 10, 3);
 
+        add_action('wp_ajax_nopriv_handle_estimate_form', [
+            $this,
+            'handle_estimate_form',
+        ]);
+        add_action('wp_ajax_handle_estimate_form', [
+            $this,
+            'handle_estimate_form',
+        ]);
+
         parent::__construct();
     }
 
@@ -93,6 +102,102 @@ class StarterSite extends Site {
         ]);
 
         add_theme_support('menus');
+    }
+
+    public function handle_estimate_form() {
+        // Check the nonce for security
+        if (!check_ajax_referer('estimate_form_nonce', 'security', false)) {
+            wp_send_json_error([
+                'errors' => ['nonce' => 'Invalid nonce.'],
+            ]);
+            wp_die();
+        }
+
+        $decoded_data = [];
+        $errors = [];
+
+        foreach ($_POST as $key => $value) {
+            // Attempt to decode JSON, if applicable
+            $decoded_value = json_decode(stripslashes($value), true);
+
+            // If json_decode returns an array, use it, otherwise use the original value
+            if (
+                json_last_error() === JSON_ERROR_NONE &&
+                is_array($decoded_value)
+            ) {
+                $decoded_data[$key] = $decoded_value;
+            } else {
+                $decoded_data[$key] = $value;
+            }
+
+            // Check if the field is an 'answer' field and validate it
+            if (isset($decoded_data[$key]['answer'])) {
+                $answer = $decoded_data[$key]['answer'];
+
+                // Ensure the answer is not empty
+                if (
+                    empty($answer) ||
+                    (is_array($answer) && !array_filter($answer))
+                ) {
+                    $errors[$key] = 'This field cannot be empty.';
+                } else {
+                    // Sanitize the answer field
+                    if (is_array($answer)) {
+                        $decoded_data[$key]['answer'] = array_map(
+                            'sanitize_text_field',
+                            $answer
+                        );
+                    } else {
+                        $decoded_data[$key]['answer'] = sanitize_text_field(
+                            $answer
+                        );
+                    }
+                }
+
+                // Special handling for email and phone fields
+                if ($key === 'email') {
+                    if (empty($answer)) {
+                        $errors[$key] = 'Email field cannot be empty.';
+                    } elseif (!is_email($answer)) {
+                        $errors[$key] = 'Invalid email address.';
+                    } else {
+                        // Sanitize the email field
+                        $decoded_data[$key]['answer'] = sanitize_email($answer);
+                    }
+                }
+
+                if ($key === 'phone') {
+                    if (empty($answer)) {
+                        $errors[$key] = 'Phone field cannot be empty.';
+                    } elseif (
+                        !preg_match(
+                            '/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/',
+                            $answer
+                        )
+                    ) {
+                        $errors[$key] = 'Invalid phone number.';
+                    } else {
+                        // Sanitize the phone field
+                        $decoded_data[$key]['answer'] = sanitize_text_field(
+                            $answer
+                        );
+                    }
+                }
+            }
+        }
+
+        // If there are errors, return them
+        if (!empty($errors)) {
+            wp_send_json_error([
+                'errors' => $errors,
+            ]);
+            wp_die();
+        }
+
+        wp_send_json_success([
+            'message' => 'Merci pour votre message. Il a bien été envoyé.',
+            'sanitized_data' => $decoded_data,
+        ]);
     }
 
     /**
@@ -204,8 +309,10 @@ class StarterSite extends Site {
         );
         wp_enqueue_script('script');
 
+        // Localize script with nonce for security
         wp_localize_script('script', 'ajax_object', [
             'ajax_url' => admin_url('admin-ajax.php'),
+            'estimate_form_nonce' => wp_create_nonce('estimate_form_nonce'),
         ]);
     }
 

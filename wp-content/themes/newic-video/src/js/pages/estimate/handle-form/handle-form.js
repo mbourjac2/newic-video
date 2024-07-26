@@ -1,3 +1,7 @@
+import { animateFieldset } from './animate-fieldset.js';
+import { validateFields } from './validate-fields.js';
+import { submitForm } from './submit-form.js';
+
 export const handleEstimateForm = () => {
   const form = document.querySelector('.form');
 
@@ -8,7 +12,7 @@ export const handleEstimateForm = () => {
 
   const handleCurrentFieldset = () => {
     const fieldset = fieldsets[currentIndex];
-    const inputType = fieldset.dataset.input;
+    const inputType = fieldset.dataset.type;
 
     const submitFieldButton = fieldset.querySelector('button');
     const questionPopups = fieldset.querySelectorAll('.popup');
@@ -23,10 +27,7 @@ export const handleEstimateForm = () => {
       inputs.length > 0 ? inputs[0].closest('.inputs-group') : input;
 
     const handleSubmittedFieldValues = () => {
-      const { values, errorMessage } = getValidatedFieldValues(
-        inputType,
-        fieldControls,
-      );
+      const { values, errorMessage } = validateFields(inputType, fieldControls);
 
       handleErrorMessage({ fieldset, errorMessage });
 
@@ -40,7 +41,9 @@ export const handleEstimateForm = () => {
           showNextFieldset();
           handleCurrentFieldset();
         } else {
-          handleSubmitForm();
+          const action = 'handle_estimate_form';
+
+          void submitForm(form, action);
         }
 
         scrollToBottom();
@@ -48,10 +51,7 @@ export const handleEstimateForm = () => {
     };
 
     const handleInput = () => {
-      const { errorMessage } = getValidatedFieldValues(
-        inputType,
-        fieldControls,
-      );
+      const { errorMessage } = validateFields(inputType, fieldControls);
 
       handleErrorMessage({ fieldset, errorMessage });
     };
@@ -85,70 +85,6 @@ export const handleEstimateForm = () => {
       fieldControls,
       submitFieldButton,
     });
-  };
-
-  const getValidatedFieldValues = (inputType, fieldControls) => {
-    let values = [];
-    let errorMessage = null;
-
-    switch (inputType) {
-      case 'text':
-      case 'email': {
-        const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/gi;
-
-        if (
-          fieldControls.name === 'phone' &&
-          !phoneRegex.test(fieldControls.value)
-        ) {
-          errorMessage = 'Please provide a valid phone.';
-        }
-
-        if (inputType === 'email' && fieldControls.validity.typeMismatch) {
-          errorMessage = 'Please provide a valid email.';
-        }
-
-        if (fieldControls.validity.valueMissing) {
-          errorMessage = 'This field is required.';
-        }
-
-        if (!errorMessage) {
-          values = [fieldControls.value];
-        }
-
-        break;
-      }
-
-      case 'checkbox': {
-        const checkboxes = Array.from(fieldControls.querySelectorAll('input'));
-        const selectedCheckboxes = checkboxes.filter(
-          (checkbox) => checkbox.checked,
-        );
-
-        if (selectedCheckboxes.length > 0) {
-          values = selectedCheckboxes.map(
-            (selectedCheckbox) => selectedCheckbox.nextElementSibling.innerText,
-          );
-        } else {
-          errorMessage = 'Please select at least one option.';
-        }
-
-        break;
-      }
-
-      case 'radio': {
-        const selectedRadio = Array.from(
-          fieldControls.querySelectorAll('input'),
-        ).find((radio) => radio.checked);
-
-        if (selectedRadio) {
-          values = [selectedRadio.nextElementSibling.innerText];
-        }
-
-        break;
-      }
-    }
-
-    return { values, errorMessage };
   };
 
   const displayFieldsetValues = (values) => {
@@ -189,48 +125,11 @@ export const handleEstimateForm = () => {
     fieldsets[currentIndex].classList.remove('hidden');
   };
 
-  const animateFieldset = ({
-    questionPopups,
-    fieldControls,
-    submitFieldButton,
-  }) => {
-    const initialState = { opacity: 0, x: -20 };
-    const animatedState = {
-      opacity: 1,
-      x: 0,
-      duration: 0.5,
-      ease: 'power2.out',
-    };
-
-    gsap.set(questionPopups, initialState);
-    gsap.set(fieldControls, initialState);
-
-    if (submitFieldButton) gsap.set(submitFieldButton, initialState);
-
-    gsap.fromTo(questionPopups, initialState, {
-      ...animatedState,
-      stagger: 0.2,
-      onComplete: () => {
-        gsap.fromTo(fieldControls, initialState, animatedState);
-
-        if (submitFieldButton) {
-          gsap.fromTo(submitFieldButton, initialState, animatedState);
-        }
-      },
-    });
-  };
-
   const scrollToBottom = () => {
     form.scrollTo({
       top: form.scrollHeight,
       behavior: 'smooth',
     });
-  };
-
-  const handleSubmitForm = () => {
-    const formData = new FormData(form);
-
-    for (const [key, value] of formData.entries()) console.log(key, value);
   };
 
   handleCurrentFieldset();

@@ -1,4 +1,4 @@
-import { handleEstimateForm } from './handle-estimate-form.js';
+import { handleEstimateForm } from './form/handle-form.js';
 
 export const handleEstimate = () => {
   const estimatePage = document.querySelector('.estimate');

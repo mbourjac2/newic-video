@@ -3,17 +3,16 @@
 {% block content %}
   {# header #}
   {% include "layout/header.twig" %}
-  <main class="estimate px-8 py-4 flex justify-center items-center">
-    <form action="" class="form flex flex-col gap-12 border rounded-xl h-[80vh] w-[80vw] p-8 overflow-auto">
+  <main class="estimate max-w-screen-2xl mx-auto px-8 py-4 flex justify-center items-center">
+    <form action="" class="form flex flex-col gap-12 border rounded-xl h-[calc(100vh-6.75rem)] w-full p-8 overflow-auto">
       {% for item in post.meta('form') %}
         {% set hidden_class = loop.first ? '' : 'hidden' %}
         {% set is_last = loop.last %}
-        {% if item.acf_fc_layout == 'text_input' %}
-          {% include "pages/estimate/form/input.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'text'} %}
-        {% elseif item.acf_fc_layout == 'email_input' %}
-          {% include "pages/estimate/form/input.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'email'} %}
+        {% if item.acf_fc_layout == 'input' %}
+          {% include "pages/estimate/form/input.twig" with {'item': item, 'hidden_class': hidden_class} %}
         {% elseif item.acf_fc_layout == 'checkboxes' %}
-          {% include "pages/estimate/form/inputs-group.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'checkbox', 'inputs': item.checkboxes, 'has_submit_field': true, 'has_error_message': true} %}
+          {% include "pages/estimate/form/inputs-group.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'checkbox',
+          'inputs': item.checkboxes, 'has_submit_field': true, 'has_error_message': true} %}
         {% elseif item.acf_fc_layout == 'radio_buttons' %}
           {% include "pages/estimate/form/inputs-group.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'radio', 'inputs': item.radio_buttons} %}
         {% endif %}

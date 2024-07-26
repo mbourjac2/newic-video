@@ -20,6 +20,7 @@ module.exports = {
     sourceType: 'module',
   },
   globals: {
+    ajax_object: 'readonly',
     gsap: 'readonly',
     ScrollTrigger: 'readonly',
   },

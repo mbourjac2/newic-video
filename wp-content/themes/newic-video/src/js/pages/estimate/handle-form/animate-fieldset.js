@@ -11,20 +11,22 @@ export const animateFieldset = ({
     ease: 'power2.out',
   };
 
+  const tl = gsap.timeline();
+
+  // Set the initial state for all elements
   gsap.set(questionPopups, initialState);
   gsap.set(fieldControls, initialState);
-
   if (submitFieldButton) gsap.set(submitFieldButton, initialState);
 
-  gsap.fromTo(questionPopups, initialState, {
+  // Add animations to the timeline
+  tl.fromTo(questionPopups, initialState, {
     ...animatedState,
     stagger: 0.2,
-    onComplete: () => {
-      gsap.fromTo(fieldControls, initialState, animatedState);
-
-      if (submitFieldButton) {
-        gsap.fromTo(submitFieldButton, initialState, animatedState);
-      }
-    },
   });
+
+  tl.fromTo(fieldControls, initialState, animatedState);
+
+  if (submitFieldButton) {
+    tl.fromTo(submitFieldButton, initialState, animatedState);
+  }
 };

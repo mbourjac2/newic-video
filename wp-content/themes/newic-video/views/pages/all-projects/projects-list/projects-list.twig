@@ -1,20 +1,39 @@
+{% set newic_link = post.meta('newic_link') %}
+
 {% for project in projects %}
-  <a href="{{ project.link}}" class="project-card selected" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
+  {% if loop.index > 1 and (loop.index - 1) % 9 == 0 %}
+    <a href="https://www.agence-newic.com/" target="_blank" rel="noopener noreferrer" class="project-card selected" data-categories="[]" data-fields="[]">
+      <article class="flex flex-col gap-2">
+        <div class="bg-primary-light">
+          <img src="{{ newic_link.thumbnail.url }}" alt="{{ newic_link.label }}" class="aspect-video w-full">
+        </div>
+        <h2 class="truncate">
+          <span>{{ newic_link.label }}</span>
+        </h2>
+        <ul class="flex flex-wrap gap-1">
+          {% for tag in newic_link.tags %}
+            <li class="project-tag text-nowrap bg-primary-light text-sm leading-none px-1.5 py-1 rounded-md">{{ tag.tag }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+    </a>
+  {% endif %}
+
+  <a href="{{ project.link }}" class="project-card selected" data-categories="{{ project.terms('project-category')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}" data-fields="{{ project.terms('field')|map(term => {'slug': term.slug})|json_encode|e('html_attr') }}">
     <article
       class="flex flex-col gap-2">
       {# video thumbnail #}
       {% set video_thumbnail = project.video_thumbnail %}
       {% set vimeo_thumbnail = get_vimeo_data_from_link(project.video_link, 'thumbnail_url') %}
       <div class="bg-primary-light aspect-video">
-        <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="Video Thumbnail" class="object-cover w-full">
+        <img src="{{ video_thumbnail ? video_thumbnail.url : vimeo_thumbnail }}" alt="{{ project.title }}" class="object-cover w-full">
       </div>
       {# clients and title #}
       <h2 class="truncate">
         {% set clients = project.terms('client') %}
         {% if clients and clients|length > 0 %}
           <span class="project-clients">{{ clients | join(', ') }}
-            -
-          </span>
+            -</span>
         {% endif %}
         <span class="project-title">{{ project.title }}</span>
       </h2>

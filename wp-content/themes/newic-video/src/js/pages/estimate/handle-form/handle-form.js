@@ -41,9 +41,7 @@ export const handleEstimateForm = () => {
           showNextFieldset();
           handleCurrentFieldset();
         } else {
-          const action = 'handle_estimate_form';
-
-          void submitForm(form, action);
+          void handleSubmit(form);
         }
 
         scrollToBottom();
@@ -130,6 +128,21 @@ export const handleEstimateForm = () => {
       top: form.scrollHeight,
       behavior: 'smooth',
     });
+  };
+
+  const handleSubmit = async (form) => {
+    const action = 'handle_estimate_form';
+
+    const submitMessage = document.querySelector('.submit-message');
+    const submitLoader = document.querySelector('.submit-loader');
+
+    submitLoader.classList.remove('hidden');
+
+    const response = await submitForm(form, action);
+
+    submitLoader.classList.add('hidden');
+    submitMessage.textContent = response.data.message;
+    submitMessage.classList.remove('hidden');
   };
 
   handleCurrentFieldset();

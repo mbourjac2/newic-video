@@ -5,7 +5,7 @@
   {% include "layout/header.twig" %}
   <main class="estimate max-w-screen-2xl mx-auto px-8 py-4 flex justify-center items-center">
     <form action="" class="form flex flex-col gap-12 border rounded-xl h-[calc(100vh-6.75rem)] w-full p-8 overflow-auto">
-      {% for item in post.meta('form') %}
+     {% for item in post.meta('form') %}
         {% set hidden_class = loop.first ? '' : 'hidden' %}
         {% set is_last = loop.last %}
         {% if item.acf_fc_layout == 'input' %}
@@ -17,7 +17,8 @@
           {% include "pages/estimate/form/inputs-group.twig" with {'item': item, 'hidden_class': hidden_class, 'input_type': 'radio', 'inputs': item.radio_buttons} %}
         {% endif %}
       {% endfor %}
-      <button type="submit" class="submit-button border px-6 py-2 rounded-xl w-fit self-end hidden">Submit</button>
-    </form>
-  </main>
+      <p class="submit-loader hidden">Envoi en cours...</p>
+      <p class="submit-message hidden"></p>
+  </form>
+</main>
 {% endblock %}

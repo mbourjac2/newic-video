@@ -157,7 +157,7 @@ export const filterProjects = () => {
     clearSelectedTags();
   });
 
-  const handleNoResult = (project) => {
+  const handleEmptySearch = (project) => {
     allProjectsTagInput.checked = true;
 
     clearSearchedProject(project);
@@ -172,7 +172,7 @@ export const filterProjects = () => {
 
     for (const project of projects) {
       if (isSearchEmpty) {
-        handleNoResult(project);
+        handleEmptySearch(project);
         continue;
       }
 
@@ -337,6 +337,14 @@ export const filterProjects = () => {
 
       clearSelectedTags();
     }
+
+    const noMatch = Array.from(projects).every((project) => {
+      return project.classList.contains('hidden');
+    });
+
+    const noMatchMessage = document.querySelector('.no-match');
+
+    noMatchMessage.classList.toggle('hidden', !noMatch);
   });
 
   handleSearchParams();

@@ -3,10 +3,10 @@
 {% block content %}
   {# header #}
   {% include "layout/header.twig" %}
-  <main class="all-projects flex flex-col gap-8 px-8 py-4">
-    <h1 class="text-2xl font-bold">{{ post.title }}</h1>
-    <form class="search-projects relative flex items-center border">
-      <input type="text" name="search" id="search" placeholder="Rechercher" class="p-2 w-full">
+  <main class="all-projects max-w-screen-2xl mx-auto flex flex-col gap-8 px-8 py-4">
+    <h1 class="text-lg font-bold">{{ post.title }}</h1>
+    <form class="search-projects relative flex items-center border rounded-xl">
+      <input type="text" name="search" id="search" placeholder="Rechercher" class="p-2 w-full rounded-xl">
       <button type="submit" class="absolute top-0 right-0 p-2">
         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="none" viewbox="0 0 24 24" stroke-width="1.5" stroke="#e5e7eb" class="size-6">
           <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
@@ -18,8 +18,8 @@
     {% if projects and projects|length > 0 %}
       {# filters #}
       {% include "pages/all-projects/filters/filters.twig" %}
-      <div
-        class="grid grid-cols-4 gap-8">
+      <div class="gallery grid grid-cols-[repeat(auto-fill,minmax(21.25rem,1fr))] gap-8">
+        <p class="no-match hidden">Aucun résultat pour cette recherche...</p>
         {# projects list #}
         {% include "pages/all-projects/projects-list/projects-list.twig" with {'project': project} %}
       </div>

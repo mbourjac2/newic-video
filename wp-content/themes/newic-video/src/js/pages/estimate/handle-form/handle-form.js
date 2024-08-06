@@ -1,8 +1,7 @@
-import { animateFieldset } from './animate-fieldset.js';
 import { validateFields } from './validate-fields.js';
 import { submitForm } from './submit-form.js';
 
-export const handleEstimateForm = () => {
+export const handleEstimateForm = (animateFieldset) => {
   const form = document.querySelector('.form');
 
   if (!form) return;

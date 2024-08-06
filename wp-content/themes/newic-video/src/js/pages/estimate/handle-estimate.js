@@ -1,9 +1,11 @@
-import { handleEstimateForm } from './form/handle-form.js';
+import { handleEstimateForm } from './handle-form/handle-form.js';
+import { animateEstimate } from './animate-estimate.js';
 
 export const handleEstimate = () => {
   const estimatePage = document.querySelector('.estimate');
 
   if (!estimatePage) return;
 
-  handleEstimateForm();
+  const { animateFieldset } = animateEstimate();
+  handleEstimateForm(animateFieldset);
 };

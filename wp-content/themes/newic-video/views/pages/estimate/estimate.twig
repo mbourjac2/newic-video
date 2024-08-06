@@ -4,8 +4,14 @@
   {# header #}
   {% include "layout/header.twig" %}
   <main class="estimate max-w-screen-2xl mx-auto px-8 py-4 flex justify-center items-center">
-    <form action="" class="form flex flex-col gap-12 border rounded-xl h-[calc(100vh-6.75rem)] w-full p-8 overflow-auto">
-     {% for item in post.meta('form') %}
+    <form action="" class="form flex flex-col gap-2 border rounded-xl h-[calc(100vh-6.75rem)] w-full p-8 overflow-auto">
+    <p class="intro flex flex-col gap-2">
+      {% for item in post.intro %}
+        <span class="popup inline-block border rounded-xl px-6 py-2 w-fit">{{ item.popup|no_p_tags }}</span>
+      {% endfor %}
+    </p>
+    <div class="flex flex-col gap-12">
+      {% for item in post.meta('form') %}
         {% set hidden_class = loop.first ? '' : 'hidden' %}
         {% set is_last = loop.last %}
         {% if item.acf_fc_layout == 'input' %}
@@ -19,6 +25,7 @@
       {% endfor %}
       <p class="submit-loader hidden">Envoi en cours...</p>
       <p class="submit-message hidden"></p>
+    </div>
   </form>
 </main>
 {% endblock %}

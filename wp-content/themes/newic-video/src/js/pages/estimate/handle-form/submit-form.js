@@ -14,9 +14,7 @@ export const submitForm = async (form, action) => {
   // Add the nonce to the form data
   formattedFormData.append('security', ajax_object.estimate_form_nonce);
 
-  const data = await postData(formattedFormData, action);
-
-  console.log(data);
+  return postData(formattedFormData, action);
 };
 
 const postData = async (formData, action) => {

@@ -1,5 +1,9 @@
 {% extends "base.twig" %}
 
 {% block content %}
-	Sorry, we couldn't find what you're looking for.
+  {# header #}
+  {% include "layout/header.twig" %}
+  <main class="not-found">
+    <p>Not found</p>
+  </main>
 {% endblock %}

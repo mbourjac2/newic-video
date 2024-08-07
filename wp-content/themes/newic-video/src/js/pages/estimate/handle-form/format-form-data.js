@@ -2,31 +2,25 @@ export const formatFormData = (formData) => {
   let formattedFormData = {};
 
   for (const [key, value] of formData.entries()) {
-    const input = document.querySelector(`input[value=${CSS.escape(value)}]`);
-    const fieldset = document.querySelector(
-      `fieldset[data-id=${CSS.escape(key)}]`,
+    const choiceInput = document.querySelector(
+      `input[name=${key}][value=${CSS.escape(value)}]`,
     );
-    const legend = fieldset.querySelectorAll('legend .popup');
+    const input = choiceInput ?? document.querySelector(`input[name=${key}]`);
 
     formattedFormData = {
       ...formattedFormData,
       [key]: {
-        question:
-          legend.length > 0
-            ? Array.from(legend).map((span) => span.textContent.trim())
-            : Array.from(fieldset.querySelectorAll('label .popup')).map(
-                (span) => span.textContent.trim(),
-              ),
+        label: input.dataset.label,
         answer:
-          input?.type === 'checkbox'
+          choiceInput?.type === 'checkbox'
             ? key in formattedFormData
               ? [
                   ...formattedFormData[key].answer,
-                  input.nextElementSibling.innerText,
+                  choiceInput.nextElementSibling.innerText,
                 ]
-              : [input.nextElementSibling.innerText]
-            : input?.type === 'radio'
-              ? input.nextElementSibling.innerText
+              : [choiceInput.nextElementSibling.innerText]
+            : choiceInput?.type === 'radio'
+              ? choiceInput.nextElementSibling.innerText
               : value,
       },
     };

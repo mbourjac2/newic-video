@@ -6,7 +6,7 @@
     <div class="inputs-group flex gap-2 self-end">
       {% for input in inputs %}
         <div>
-          <input type="{{ input_type }}" name="{{ item.id }}" id="{{ item.id ~ "-" ~ input.value }}" value="{{ input.value }}" class="peer sr-only"/>
+          <input type="{{ input_type }}" name="{{ item.id }}" id="{{ item.id ~ "-" ~ input.value }}" value="{{ input.value }}" data-label="{{ item.label }}" class="peer sr-only"/>
           <label for="{{ item.id ~ "-" ~ input.value }}" class="cursor-pointer inline-block px-6 py-2 border rounded-xl peer-checked:bg-primary-light peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2">{{ input.label }}</label>
         </div>
       {% endfor %}

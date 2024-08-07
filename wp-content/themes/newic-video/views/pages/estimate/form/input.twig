@@ -3,7 +3,7 @@
     <label for="{{ item.id }}">
       {% include "pages/estimate/form/question-popups.twig" %}
     </label>
-    <input type="{{ item.type }}" id="{{ item.id }}" name="{{ item.id }}" class="border px-6 py-2 rounded-xl text-right" required/>
+    <input type="{{ item.type }}" id="{{ item.id }}" name="{{ item.id }}" data-label="{{ item.label }}" class="border px-6 py-2 rounded-xl text-right" required/>
     {% include "pages/estimate/form/error-message.twig" %}
     {% include "pages/estimate/form/submit-field.twig" %}
   </div>

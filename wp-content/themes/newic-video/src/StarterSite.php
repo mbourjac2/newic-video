@@ -117,6 +117,11 @@ class StarterSite extends Site {
         $errors = [];
 
         foreach ($_POST as $key => $value) {
+            // Skip the security field
+            if ($key === 'security') {
+                continue;
+            }
+
             // Attempt to decode JSON, if applicable
             $decoded_value = json_decode(stripslashes($value), true);
 
@@ -194,10 +199,47 @@ class StarterSite extends Site {
             wp_die();
         }
 
-        wp_send_json_success([
-            'message' => 'Merci pour votre message. Il a bien été envoyé.',
-            'sanitized_data' => $decoded_data,
-        ]);
+        // Prepare email content
+        $admin_email = get_option('admin_email');
+        $subject = 'Nouveau devis';
+        $headers = 'Content-Type: text/html; charset="UTF-8"';
+        $message = '<h1>Nouveau devis</h1>';
+        $message .= '<ul>';
+
+        foreach ($decoded_data as $key => $data) {
+            if (isset($data['label']) && isset($data['answer'])) {
+                $label = is_array($data['label'])
+                    ? implode(', ', $data['label'])
+                    : $data['label'];
+                $answer = is_array($data['answer'])
+                    ? implode(', ', $data['answer'])
+                    : $data['answer'];
+
+                $message .=
+                    '<li><strong>' .
+                    esc_html($label) .
+                    ':</strong> ' .
+                    esc_html($answer) .
+                    '</li>';
+            }
+        }
+
+        $message .= '</ul>';
+
+        // Send email
+        $email_sent = wp_mail($admin_email, $subject, $message, $headers);
+
+        if ($email_sent) {
+            wp_send_json_success([
+                'message' => 'Merci pour votre message. Il a bien été envoyé.',
+                'data' => $decoded_data,
+            ]);
+        } else {
+            wp_send_json_error([
+                'message' =>
+                    'Une erreur s\'est produite lors de l\'envoi de votre message. Veuillez réessayer plus tard.',
+            ]);
+        }
     }
 
     /**

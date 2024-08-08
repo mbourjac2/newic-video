@@ -35,7 +35,7 @@
           <span class="project-clients">{{ clients | join(', ') }}
             -</span>
         {% endif %}
-        <span class="project-title">{{ project.title }}</span>
+        <span class="project-title">{{ project.project_title }}</span>
       </h2>
       {# project tags #}
       {% set fields = project.terms('field') %}

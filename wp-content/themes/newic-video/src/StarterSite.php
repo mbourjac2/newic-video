@@ -29,6 +29,15 @@ class StarterSite extends Site {
             'handle_estimate_form',
         ]);
 
+        add_action('wp_ajax_nopriv_handle_contact_form', [
+            $this,
+            'handle_contact_form',
+        ]);
+        add_action('wp_ajax_handle_contact_form', [
+            $this,
+            'handle_contact_form',
+        ]);
+
         parent::__construct();
     }
 
@@ -242,6 +251,84 @@ class StarterSite extends Site {
         }
     }
 
+    public function handle_contact_form() {
+        $data = [
+            'name' => sanitize_text_field($_POST['name']),
+            'email' => sanitize_email($_POST['email']),
+            'phone' => sanitize_text_field($_POST['phone']),
+            'subject' => sanitize_text_field($_POST['subject']),
+            'message' => sanitize_textarea_field($_POST['message']),
+        ];
+
+        $errors = $this->validate_contact_form($data);
+
+        if (!empty($errors)) {
+            wp_send_json_error([
+                'message' =>
+                    'Certains champs sont invalides. Veuillez les corriger.',
+                'errors' => $errors,
+            ]);
+        }
+
+        $email_sent = $this->send_contact_email($data);
+
+        if ($email_sent) {
+            wp_send_json_success([
+                'message' => 'Merci pour votre message. Il a bien été envoyé.',
+            ]);
+        } else {
+            wp_send_json_error([
+                'message' =>
+                    'Une erreur s\'est produite lors de l\'envoi de votre message. Veuillez réessayer plus tard.',
+            ]);
+        }
+    }
+
+    public function validate_contact_form($data) {
+        $errors = [];
+
+        if (empty($data['name'])) {
+            $errors['name'] = 'Ce champ est requis.';
+        }
+
+        if (empty($data['email'])) {
+            $errors['email'] = 'Ce champ est requis.';
+        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Veuillez saisir une adresse e-mail valide.';
+        }
+
+        if (empty($data['phone'])) {
+            $errors['phone'] = 'Ce champ est requis.';
+        } elseif (!$this->is_valid_phone($data['phone'])) {
+            $errors['phone'] = 'Veuillez saisir un numéro de téléphone valide.';
+        }
+
+        if (empty($data['message'])) {
+            $errors['message'] = 'Ce champ est requis.';
+        }
+
+        return $errors;
+    }
+
+    public function is_valid_phone($phone) {
+        $phoneRegex = '/^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/i';
+        return preg_match($phoneRegex, $phone);
+    }
+
+    public function send_contact_email($data) {
+        $headers = 'Content-Type: text/html; charset="UTF-8"';
+        $to = get_option('admin_email');
+        $subject = 'Newic Vidéo - Nouvelle demande de contact';
+
+        $message = "Nom : {$data['name']}" . '<br>';
+        $message .= "Email : {$data['email']}" . '<br>';
+        $message .= "Numéro de téléphone : {$data['phone']}" . '<br>';
+        $message .= "Sujet : {$data['subject']}" . '<br>';
+        $message .= "Message : {$data['message']}";
+
+        return wp_mail($to, $subject, $message, $headers);
+    }
+
     /**
      * Grab the specified data like Thumbnail URL of a publicly embeddable video hosted on Vimeo.
      *
@@ -355,6 +442,7 @@ class StarterSite extends Site {
         wp_localize_script('script', 'ajax_object', [
             'ajax_url' => admin_url('admin-ajax.php'),
             'estimate_form_nonce' => wp_create_nonce('estimate_form_nonce'),
+            'contact_form_nonce' => wp_create_nonce('contact_form_nonce'),
         ]);
     }
 

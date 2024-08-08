@@ -1,0 +1,12 @@
+<fieldset class="fieldset">
+  <div class="flex flex-col gap-1">
+    <label for="{{ id }}">
+      <span>{{ label }}</span>
+      {% if is_required %}
+        <span>*</span>
+      {% endif %}
+    </label>
+    <input type="{{ type }}" id="{{ id }}" name="{{ id }}" data-label="{{ label }}" class="border px-6 py-2 rounded-xl" {% if is_required %} required {% endif %}/>
+    <p class="mt-1"></p>
+  </div>
+</fieldset>

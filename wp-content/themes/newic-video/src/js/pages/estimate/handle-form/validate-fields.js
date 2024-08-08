@@ -4,22 +4,20 @@ export const validateFields = (inputType, fieldControls) => {
 
   switch (inputType) {
     case 'text':
-    case 'email': {
+    case 'email':
+    case 'tel': {
       const phoneRegex = /^(?:(?:\+|00)33|0)\s*[1-9](?:[\s.-]*\d{2}){4}$/gi;
 
-      if (
-        fieldControls.name === 'phone' &&
-        !phoneRegex.test(fieldControls.value)
-      ) {
-        errorMessage = 'Please provide a valid phone.';
+      if (inputType === 'tel' && !phoneRegex.test(fieldControls.value)) {
+        errorMessage = 'Veuillez saisir un numéro de téléphone valide.';
       }
 
       if (inputType === 'email' && fieldControls.validity.typeMismatch) {
-        errorMessage = 'Please provide a valid email.';
+        errorMessage = 'Veuillez saisir une adresse e-mail valide.';
       }
 
       if (fieldControls.validity.valueMissing) {
-        errorMessage = 'This field is required.';
+        errorMessage = 'Ce champ est requis.';
       }
 
       if (!errorMessage) {

@@ -20,7 +20,7 @@ export const handleEstimateForm = (animateFieldset) => {
       'input[type="radio"], input[type="checkbox"]',
     );
     const input = fieldset.querySelector(
-      'input[type="text"], input[type="email"]',
+      'input[type="text"], input[type="email"], input[type="tel"]',
     );
     const fieldControls =
       inputs.length > 0 ? inputs[0].closest('.inputs-group') : input;
@@ -138,6 +138,8 @@ export const handleEstimateForm = (animateFieldset) => {
     submitLoader.classList.remove('hidden');
 
     const response = await submitForm(form, action);
+
+    console.log(response);
 
     submitLoader.classList.add('hidden');
     submitMessage.textContent = response.data.message;

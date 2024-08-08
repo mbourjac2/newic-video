@@ -1,4 +1,5 @@
 import { formatFormData } from './format-form-data.js';
+import { postData } from '../../../helpers/post-data.js';
 
 export const submitForm = async (form, action) => {
   const formData = new FormData(form);
@@ -15,21 +16,4 @@ export const submitForm = async (form, action) => {
   formattedFormData.append('security', ajax_object.estimate_form_nonce);
 
   return postData(formattedFormData, action);
-};
-
-const postData = async (formData, action) => {
-  const url = new URL(ajax_object.ajax_url);
-
-  url.searchParams.append('action', action);
-
-  const response = await fetch(url.href, {
-    method: 'POST',
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error('Error submitting formData to admin-ajax.php');
-  }
-
-  return response.json();
 };

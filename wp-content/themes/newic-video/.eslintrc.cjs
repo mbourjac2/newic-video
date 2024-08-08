@@ -23,6 +23,7 @@ module.exports = {
     ajax_object: 'readonly',
     gsap: 'readonly',
     ScrollTrigger: 'readonly',
+    L: 'readonly',
   },
   rules: {
     'prefer-const': 'error',
